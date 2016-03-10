@@ -23,7 +23,7 @@ class Widget(object):
     * converts import value and converts it to appropriate python
       representation
     """
-    def clean(self, value):
+    def clean(self, value, row=None, *args, **kwargs):
         """
         Returns appropriate python objects for import value.
         """
@@ -51,7 +51,7 @@ class IntegerWidget(NumberWidget):
     Widget for converting integer fields.
     """
 
-    def clean(self, value):
+    def clean(self, value, row=None, *args, **kwargs):
         if self.is_empty(value):
             return None
         return int(float(value))
@@ -62,7 +62,7 @@ class DecimalWidget(NumberWidget):
     Widget for converting decimal fields.
     """
 
-    def clean(self, value):
+    def clean(self, value, row=None, *args, **kwargs):
         if self.is_empty(value):
             return None
         return Decimal(value)
@@ -89,7 +89,7 @@ class BooleanWidget(Widget):
             return ""
         return self.TRUE_VALUES[0] if value else self.FALSE_VALUE
 
-    def clean(self, value):
+    def clean(self, value, row=None, *args, **kwargs):
         if value == "":
             return None
         return True if value in self.TRUE_VALUES else False
@@ -112,7 +112,7 @@ class DateWidget(Widget):
             formats = (format,)
         self.formats = formats
 
-    def clean(self, value):
+    def clean(self, value, row=None, *args, **kwargs):
         if not value:
             return None
         for format in self.formats:
@@ -148,7 +148,7 @@ class DateTimeWidget(Widget):
             formats = (format,)
         self.formats = formats
 
-    def clean(self, value):
+    def clean(self, value, row=None, *args, **kwargs):
         if not value:
             return None
         for format in self.formats:
@@ -187,7 +187,7 @@ class TimeWidget(Widget):
             formats = (format,)
         self.formats = formats
 
-    def clean(self, value):
+    def clean(self, value, row=None, *args, **kwargs):
         if not value:
             return None
         for format in self.formats:
@@ -290,7 +290,7 @@ class ManyToManyWidget(Widget):
         self.field = field
         super(ManyToManyWidget, self).__init__(*args, **kwargs)
 
-    def clean(self, value):
+    def clean(self, value, row=None, *args, **kwargs):
         if not value:
             return self.model.objects.none()
         if isinstance(value, float):
